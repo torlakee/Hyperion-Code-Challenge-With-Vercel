@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-crypto-trend
+spec:
+  type: ClusterIP
+  selector:
+    app: mcp-crypto-trend
+  ports:
+    - port: 3000
+      targetPort: 3000

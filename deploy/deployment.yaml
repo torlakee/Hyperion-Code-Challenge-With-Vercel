@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-crypto-trend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mcp-crypto-trend
+  template:
+    metadata:
+      labels:
+        app: mcp-crypto-trend
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/your-org/mcp-crypto-trend:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: mcp-crypto-trend-config
+            - secretRef:
+                name: mcp-crypto-trend-secrets
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mcp-crypto-trend-secrets
+stringData:
+  CMC_API_KEY: "<replace>"
+  TAAPI_KEY: "<replace>"
+  OPENAI_API_KEY: "<replace>"
+  MCP_API_KEY: "<replace>"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mcp-crypto-trend-config
+data:
+  PORT: "3000"
