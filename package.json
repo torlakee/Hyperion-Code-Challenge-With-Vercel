@@ -1,38 +1,39 @@
 {
-  "name": "hyperion-code-challenge",
+  "name": "crypto-analyzer",
   "version": "1.0.0",
+  "description": "Analyze crypto trends using TA indicators for Claude MCP integration.",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn src/index.ts",
-    "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js",
-    "lint": "eslint \"src/**/*.{ts,tsx}\" --fix",
-    "docker:build": "docker build -t mcp-crypto-trend .",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "coverage": "vitest run --coverage"
+    "dev": "ts-node-dev src/index.ts",
+    "start": "ts-node src/index.ts",
+    "start:mcp": "ts-node src/index.ts mcp",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write .",
+    "test": "jest"
   },
+  "keywords": ["crypto", "mcp", "taapi", "coinmarketcap", "vercel-ai"],
+  "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.11.2",
-    "ai": "^4.3.15",
-    "axios": "^1.9.0",
-    "express": "^5.1.0",
-    "zod": "^3.24.4"
+    "@modelcontextprotocol/sdk": "^0.0.12",
+    "axios": "^1.6.8",
+    "dotenv": "^16.3.1",
+    "express": "^4.19.2"
   },
   "devDependencies": {
-    "@types/express": "^5.0.1",
-    "@typescript-eslint/eslint-plugin": "^8.32.1",
-    "@typescript-eslint/parser": "^8.32.1",
-    "@vitest/coverage-c8": "^0.33.0",
-    "eslint": "^9.26.0",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-import": "^2.31.0",
-    "husky": "^9.1.7",
-    "jsdom": "^26.1.0",
-    "lint-staged": "^16.0.0",
-    "msw": "^2.8.2",
-    "prettier": "^3.5.3",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.3",
+    "@types/node": "^20.11.30",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.5",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.8.3",
-    "vitest": "^3.1.3"
+    "typescript": "^5.3.3"
   }
 }

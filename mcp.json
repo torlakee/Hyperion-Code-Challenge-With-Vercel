@@ -1,0 +1,9 @@
+{
+  "name": "crypto-analyzer",
+  "version": "1.0.0",
+  "description": "MCP tool to determine if a crypto asset is trending or ranging using 1-hour indicators.",
+  "entry": "dist/index.js",
+  "license": "MIT",
+  "keywords": ["crypto", "trend", "analysis", "mcp"],
+  "mcp": true
+}

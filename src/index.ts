@@ -1,16 +1,48 @@
-import { createServer } from "@modelcontextprotocol/sdk";
-import { mcpConfig } from "./mcp/config.js";
-import { handlePrice, handleTrend } from "./mcp/handlers.js";
-import app from "./server.js";
-import { env } from "./env.js";
+import express from "express";
+import { fetchPrice } from "./providers/coinmarketcap";
+import { fetchIndicators } from "./providers/taapi";
+import { classifyTrend } from "./utils/classify";
+import dotenv from "dotenv";
+import { mcp } from "@modelcontextprotocol/sdk";
+dotenv.config();
 
-const mcp = createServer(mcpConfig);
+const app = express();
+const port = process.env.PORT || 3000;
 
-mcp.registerTool({ name: "price", schema: { symbol: "string" } }, handlePrice);
-mcp.registerTool({ name: "trend", schema: { symbol: "string" } }, handleTrend);
+app.use(express.json());
 
-mcp.listen(+env.PORT, () => {
-    console.log(`🟢 MCP server running on :${env.PORT}`);
+app.get("/analyze/:symbol", async (req, res) => {
+  const symbol = req.params.symbol.toUpperCase();
+  try {
+    const [price, indicators] = await Promise.all([
+      fetchPrice(symbol),
+      fetchIndicators(symbol),
+    ]);
+    const trendStatus = classifyTrend(indicators);
+    res.json({ symbol, price, indicators, trendStatus });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
-app.listen(4000, () => console.log("REST API on :4000"));
+if (require.main === module) {
+  const mode = process.argv[2];
+  if (mode === "mcp") {
+    mcp.model("crypto-analyzer", async ({ input }) => {
+      const { symbol } = input;
+      const [price, indicators] = await Promise.all([
+        fetchPrice(symbol),
+        fetchIndicators(symbol),
+      ]);
+      const trendStatus = classifyTrend(indicators);
+      return { symbol, price, indicators, trendStatus };
+    });
+  } else {
+    app.listen(port, () => {
+      console.log(`HTTP server running on http://localhost:${port}`);
+    });
+  }
+}
+
+export default app;
